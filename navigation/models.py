@@ -3,6 +3,9 @@ from django.db import models
 class Vehicle(models.Model):
     plate = models.CharField(max_length=10)
 
+    def __str__(self) -> str:
+        return self.plate
+
 class NavigationRecord(models.Model):
     vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE, related_name="navigation_records")
     datetime = models.DateTimeField()

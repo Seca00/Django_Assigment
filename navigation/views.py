@@ -8,6 +8,16 @@ from .models import NavigationRecord
 def home(request):
     # get NavigationRecord datas where datetime >= 2 days ago, which is last 48 hours
     # converting QuerySet to list for easy converting to JSON
-    data = list(NavigationRecord.objects.filter(datetime__gte=timezone.now()-timedelta(days=2)).values())
+    data_list = NavigationRecord.objects.filter(datetime__gte=timezone.now()-timedelta(days=2))
+    parsed_data_list = []
+    for data in data_list:
+        parsed_data_list.append(
+            {
+                'latitude': data.latitude,
+                'longitude':data.longitude,
+                'vehicle_plate': data.vehicle.plate,
+                'datetime': data.datetime.strftime('%d.%m.%Y %H:%M:%S'),
+            }
+        )
     # given indent for pretty print
-    return JsonResponse(data, safe=False, json_dumps_params={'indent': 2})
+    return JsonResponse(parsed_data_list, safe=False, json_dumps_params={'indent': 2})
